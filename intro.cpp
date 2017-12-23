@@ -9,7 +9,8 @@
 
 void interface(std::vector<std::string> test);
 void handle(std::vector<std::string>::iterator st,
-            std::vector<std::string>::iterator ptr, int &ans);
+            std::vector<std::string>::iterator ptr,
+            int &ans);
 int checkcmd(std::string str);
 
 int main(int argc, char* argv[]) {
@@ -37,24 +38,33 @@ int main(int argc, char* argv[]) {
 }
 void interface(std::vector<std::string> test) {
   std::vector<std::string>::iterator start, ptr, end;
+  std::vector<std::string> reparray;
   //std::vector<std::string> array;
   ptr = start = test.begin();
   end = test.end();
   int eos = 1;
-  int ans;
+  int ans, repeat = 0, noofrep;
   while ( eos ) {
     if ( checkcmd(*ptr) ) {
-      handle(start, ptr, ans);
-      std::string anss = std::to_string(ans);
-      test.erase(start, ptr+1);
-      ptr = test.begin();
-      end = test.end();
-      test.insert(start, anss);
-      start = ptr+1;
+        if ( *ptr == "repeat" ) {
+          repeat = 1;
+          noofrep = stoi(*(ptr-1));
+          if ( !checkcmd(*(ptr-2)) && (ptr-2) >= start )
+            reparray.push_back(*(ptr-2));
+          for (; *ptr != "endrepeat"; ++ptr )
+            reparray.push_back(*ptr);
+        }
+        handle(start, ptr, ans);
+        std::string anss = std::to_string(ans);
+        test.erase(start, ptr+1);
+        test.insert(start, anss);
+        ptr = test.begin();
+        end = test.end();
+        start = ptr+1;
     }
-
+    std::cout << &(*ptr) << " " << &(*end) << std::endl;
     if ( ptr == end ) eos = 0;
-    *ptr++;
+    ptr++;
   }
 
 }
@@ -63,7 +73,6 @@ void handle(std::vector<std::string>::iterator st,
             std::vector<std::string>::iterator ptr, int &ans) {
 
   int num1, num2;
-
   if ( (ptr - 1) >= st) num1 = stoi(*(ptr - 1));
   if ( (ptr - 2) >= st) num2 = stoi(*(ptr - 2));
   std::string toswitch = *ptr;
