@@ -1,5 +1,9 @@
+4
 2 repeat
-10 20 sub
-4 3 add
+3 4 add
+2 2 repeat
 2 mult
+3 add
+endrepeat
+mult
 endrepeat
